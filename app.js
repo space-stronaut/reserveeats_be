@@ -118,6 +118,66 @@ app.post('/login', async(req,res) => {
   }
 })
 
+app.get('/getData/:email', async(req,res) => {
+  try {
+    // const data = req.body;
+  const query = `select * from users where email = ? limit 1`;
+  const values = [req.params.email];
+
+  connection.query(query, values, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.sendStatus(500);
+      return;
+    }
+
+    console.log(result);
+    if (result.length > 0) {
+      // res.status(500)
+      res.json({
+        id : result[0].id,
+        email : result[0].email,
+        username : result[0].username,
+        gender : result[0].gender
+      }).status(200)
+    }else{
+      res.sendStatus(500)
+    }
+    // res.sendStatus(200);
+  });
+  } catch (error) {
+    
+  }
+})
+
+app.post('/update/:email', async(req,res) => {
+  try {
+    // const data = req.body;
+  const query = `update users set email = ? , username = ? where email = ?`;
+  const values = [req.body.email, req.body.username, req.params.email];
+
+  connection.query(query, values, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.sendStatus(500);
+      return;
+    }
+
+    console.log(result);
+    if (error) {
+      console.log(error);
+      res.sendStatus(500);
+      return;
+    }
+
+    console.log(result);
+    res.sendStatus(200);
+    // res.sendStatus(200);
+  });
+  } catch (error) {
+    
+  }
+})
 
 // res.json({
 //   test : "hello"
