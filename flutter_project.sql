@@ -32,7 +32,7 @@ CREATE TABLE `reservations` (
   `selectedRoom` varchar(255) NOT NULL,
   `selectedPerson` varchar(255) NOT NULL,
   `selectedTime` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `reservations`
@@ -56,7 +56,7 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `gender` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Dumping data for table `users`
