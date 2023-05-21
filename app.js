@@ -12,7 +12,8 @@ const bodyParser = require('body-parser');
 // create the connection to database
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
+  user: 'ronaldah',
+  password : "Ronaldah@2023",
   database: 'flutter_project'
 });
 
@@ -69,8 +70,8 @@ app.post('/post/test', async(req,res) => {
 app.post('/register', async(req,res) => {
   try {
     const data = req.body;
-  const query = `INSERT INTO users (username, email, gender, password) VALUES (?, ?, ?, ?)`;
-  const values = [data.username, data.email, data.gender, data.password];
+  const query = `INSERT INTO users (username, email, gender, password, foto, no_telp, alamat) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const values = [data.username, data.email, data.gender, data.password, data.foto, data.no_telp, data.alamat];
 
   connection.query(query, values, (error, result) => {
     if (error) {
@@ -105,7 +106,8 @@ app.post('/login', async(req,res) => {
       res.json({
         id : result[0].id,
         email : result[0].email,
-        username : result[0].username
+        username : result[0].username,
+        foto : result[0].foto
       }).status(200)
     }else{
       res.sendStatus(500)
@@ -137,7 +139,10 @@ app.get('/getData/:email', async(req,res) => {
         id : result[0].id,
         email : result[0].email,
         username : result[0].username,
-        gender : result[0].gender
+        gender : result[0].gender,
+        foto : result[0].foto,
+        no_telp : result[0].no_telp,
+        alamat : result[0].alamat
       }).status(200)
     }else{
       res.sendStatus(500)
@@ -152,8 +157,8 @@ app.get('/getData/:email', async(req,res) => {
 app.post('/update/:email', async(req,res) => {
   try {
     // const data = req.body;
-  const query = `update users set email = ? , username = ? where email = ?`;
-  const values = [req.body.email, req.body.username, req.params.email];
+  const query = `update users set email = ? , username = ?, foto = ?, alamat = ?, no_telp = ? where email = ?`;
+  const values = [req.body.email, req.body.username, req.body.foto, req.body.alamat, req.body.noTelp, req.params.email];
 
   connection.query(query, values, (error, result) => {
     if (error) {
