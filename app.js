@@ -12,8 +12,8 @@ const bodyParser = require('body-parser');
 // create the connection to database
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'root',
-  // password : "Ronaldah@2023",
+  user: 'ronaldah',
+  password : "Ronaldah@2023",
   database: 'flutter_project'
 });
 
@@ -49,8 +49,29 @@ app.get('/reservations', async(req,res) => {
 app.post('/post/test', async(req,res) => {
   try {
     const data = req.body;
-  const query = `INSERT INTO reservations (selectedRoom, selectedPerson, selectedTime) VALUES (?, ?, ?)`;
-  const values = [data.selectedRoom, data.selectedPerson, data.selectedTime];
+  const query = `INSERT INTO reservations (selectedRoom, selectedPerson, selectedTime, menu) VALUES (?, ?, ?, ?)`;
+  const values = [data.selectedRoom, data.selectedPerson, data.selectedTime, data.menu];
+
+  connection.query(query, values, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.sendStatus(500);
+      return;
+    }
+
+    console.log(result);
+    res.sendStatus(200);
+  });
+  } catch (error) {
+    
+  }
+})
+
+app.post('/menu/add', async(req,res) => {
+  try {
+    const data = req.body;
+  const query = `INSERT INTO menu (nama_menu, status) VALUES (?, ?)`;
+  const values = [data.nama_menu, data.status];
 
   connection.query(query, values, (error, result) => {
     if (error) {
@@ -70,7 +91,7 @@ app.post('/post/test', async(req,res) => {
 app.post('/register', async(req,res) => {
   try {
     const data = req.body;
-  const query = `INSERT INTO users (username, email, gender, password, foto, no_telp, alamat) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO users (username, email, gender, password, foto, no_telp, alamat, role) VALUES (?, ?, ?, ?, ?, ?, ?, "customer")`;
   const values = [data.username, data.email, data.gender, data.password, data.foto, data.no_telp, data.alamat];
 
   connection.query(query, values, (error, result) => {
@@ -107,7 +128,9 @@ app.post('/login', async(req,res) => {
         id : result[0].id,
         email : result[0].email,
         username : result[0].username,
-        foto : result[0].foto
+        foto : result[0].foto,
+        password : result[0].password,
+        role : result[0].role
       }).status(200)
     }else{
       res.sendStatus(500)
@@ -142,7 +165,8 @@ app.get('/getData/:email', async(req,res) => {
         gender : result[0].gender,
         foto : result[0].foto,
         no_telp : result[0].no_telp,
-        alamat : result[0].alamat
+        alamat : result[0].alamat,
+        password : result[0].password
       }).status(200)
     }else{
       res.sendStatus(500)
@@ -154,11 +178,80 @@ app.get('/getData/:email', async(req,res) => {
   }
 })
 
+app.get('/menu/active', async(req,res) => {
+  try {
+    const query = "select * from menu where status='active'";
+    
+    const hasil = connection.query(
+      query,
+      function(err, results, fields) {
+        //console.log(results); // results contains rows returned by server
+        //console.log(fields); // fields contains extra meta data about results, if available
+        res.json({
+          results,
+          // fields
+        })
+      }
+    )
+  } catch (error) {
+    
+  }
+})
+
+app.get('/menu/all', async(req,res) => {
+  try {
+    const query = "select * from menu";
+    
+    const hasil = connection.query(
+      query,
+      function(err, results, fields) {
+        //console.log(results); // results contains rows returned by server
+        //console.log(fields); // fields contains extra meta data about results, if available
+        res.json({
+          results,
+          // fields
+        })
+      }
+    )
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 app.post('/update/:email', async(req,res) => {
   try {
     // const data = req.body;
-  const query = `update users set email = ? , username = ?, foto = ?, alamat = ?, no_telp = ? where email = ?`;
-  const values = [req.body.email, req.body.username, req.body.foto, req.body.alamat, req.body.noTelp, req.params.email];
+  const query = `update users set email = ? , username = ?, foto = ?, alamat = ?, no_telp = ?, password = ? where email = ?`;
+  const values = [req.body.email, req.body.username, req.body.foto, req.body.alamat, req.body.noTelp, req.body.password, req.params.email];
+
+  connection.query(query, values, (error, result) => {
+    if (error) {
+      console.log(error);
+      res.sendStatus(500);
+      return;
+    }
+
+    console.log(result);
+    if (error) {
+      console.log(error);
+      res.sendStatus(500);
+      return;
+    }
+
+    console.log(result);
+    res.sendStatus(200);
+    // res.sendStatus(200);
+  });
+  } catch (error) {
+    
+  }
+})
+
+app.post('/menu/update/:id', async(req,res) => {
+  try {
+    // const data = req.body;
+  const query = `update menu set status = ? where id = ?`;
+  const values = [req.body.status, req.params.id];
 
   connection.query(query, values, (error, result) => {
     if (error) {
