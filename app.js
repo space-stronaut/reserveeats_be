@@ -12,8 +12,7 @@ const bodyParser = require('body-parser');
 // create the connection to database
 const connection = mysql.createConnection({
   host: 'localhost',
-  user: 'ronaldah',
-  password : "Ronaldah@2023",
+  user: 'root',
   database: 'flutter_project'
 });
 
